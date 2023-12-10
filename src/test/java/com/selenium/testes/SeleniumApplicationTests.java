@@ -1,6 +1,7 @@
 package com.selenium.testes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -35,6 +37,23 @@ class SeleniumApplicationTests {
 	}
 	
 	@Test
+	void cadastroRemessaValida() {
+		driver.get("https://dev.e-rentav.com/153/banking/remittances");
+		driver.findElement(By.className("btn-success")).click();
+		driver.findElement(By.name("vdollar")).sendKeys("5555.75");
+		WebElement conta = driver.findElement(By.cssSelector("input.el-input__inner[placeholder='- Selecionar Conta -']"));
+		conta.click();
+		conta.sendKeys("123 - AVENUE");
+		conta.sendKeys(Keys.DOWN);
+	    conta.sendKeys(Keys.ENTER);
+		driver.findElement(By.className("btn-success")).click();
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+		By feedback = By.className("alert");
+		WebElement sucesso = wait.until(ExpectedConditions.visibilityOfElementLocated(feedback));
+		assertTrue(sucesso.getText().contains("Remessa adicionado!"));
+	}
+	
+	@Test
 	void cadastroRemessaSemConta() {
 		driver.get("https://dev.e-rentav.com/153/banking/remittances");
 		driver.findElement(By.className("btn-success")).click();
@@ -51,6 +70,11 @@ class SeleniumApplicationTests {
 		driver.get("https://dev.e-rentav.com/153/banking/remittances");
 		driver.findElement(By.className("btn-success")).click();
 		driver.findElement(By.name("vdollar")).sendKeys("-5555.75");
+		WebElement conta = driver.findElement(By.cssSelector("input.el-input__inner[placeholder='- Selecionar Conta -']"));
+		conta.click();
+		conta.sendKeys("123 - AVENUE");
+		conta.sendKeys(Keys.DOWN);
+	    conta.sendKeys(Keys.ENTER);
 		driver.findElement(By.className("btn-success")).click();
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 		By feedback = By.className("invalid-feedback");
